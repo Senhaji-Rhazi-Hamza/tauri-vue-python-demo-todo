@@ -1,0 +1,17 @@
+[project]
+name = "src-python"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "platformdirs>=4.3.7",
+    "sanic>=25.3.0",
+    "sqlalchemy>=2.0.40",
+]
+
+[dependency-groups]
+dev = [
+    "ipdb>=0.13.13",
+    "pyinstaller>=6.13.0",
+]
