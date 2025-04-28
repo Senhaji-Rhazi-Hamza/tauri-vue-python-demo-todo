@@ -86,4 +86,17 @@ async def tasks_delete(request):
 
 if __name__ == "__main__":
 
-    app.run(host="127.0.0.1", port=8000)
+    from sanic.server import serve
+    import asyncio
+
+    async def start():
+        await serve(
+            app,
+            host="127.0.0.1",
+            port=8000,
+            single_process=True,   # no forking at all
+            workers=1,             # exactly one process
+            access_log=False,      # optional, quiet STDOUT clutter
+        )
+
+    asyncio.run(start)

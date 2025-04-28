@@ -26,5 +26,9 @@ make run-dev-ui
 # This will generate a bin ready for exec 
 make build-app
 ```
+This will generate a binary under : 
+````
+src-tauri/binaries/python_backend-[TRIPLE_TAURI_OS]
+````
 ### How the app looks like 
 ![screen](public/screen.png)

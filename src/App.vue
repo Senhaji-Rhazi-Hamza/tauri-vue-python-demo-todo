@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 
 // import { callPython } from "./utils";
 import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 
 function callPython(method, endpoint, payload = null) {
 
@@ -18,9 +19,12 @@ const taskName = ref("");
 const tasks = ref([]);
 
 onMounted(async () => {
-  tasks.value = await callPython("GET", "tasks").then(response => response.data)
-  console.log("task value values")
-  console.log(tasks.value)
+  // tasks.value = await callPython("GET", "tasks").then(response => response.data)
+  // console.log("task value values")
+  // console.log(tasks.value)
+  listen("backend-ready", async () => {
+    tasks.value = await callPython("GET", "tasks").then(response => response.data)
+  })
 })
 
 async function greet() {
