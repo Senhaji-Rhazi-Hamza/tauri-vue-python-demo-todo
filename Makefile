@@ -10,8 +10,6 @@ build-python-bin:
 	--clean \
 	--log-level=DEBUG \
 	--collect-all sqlalchemy \
-	--collect-all sanic \
-	--collect-all sanic_routing \
 	--collect-all platformdirs \
 	--collect-all tracerite  
 
@@ -28,6 +26,6 @@ run-dev-ui:
 	cd src-tauri && export TAURI_DEV=1 && npm run tauri dev
 
 run-dev-backend:
-	uv --directory src-backend run python run.py 
+	uv --directory src-backend run python main.py 
 
 

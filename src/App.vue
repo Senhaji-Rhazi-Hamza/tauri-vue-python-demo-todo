@@ -1,65 +1,54 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onRenderTracked } from "vue";
 
-// import { callPython } from "./utils";
-import { invoke } from "@tauri-apps/api/core";
+import { callPython } from "./utils";
 import { listen } from "@tauri-apps/api/event";
 
-function callPython(method, endpoint, payload = null) {
 
-return invoke('py_api', {
-  method,
-  endpoint,
-  payload
-})}
-
-const greetMsg = ref("");
 const taskName = ref("");
 
 const tasks = ref([]);
 
 onMounted(async () => {
-  // tasks.value = await callPython("GET", "tasks").then(response => response.data)
-  // console.log("task value values")
-  // console.log(tasks.value)
-  listen("backend-ready", async () => {
-    tasks.value = await callPython("GET", "tasks").then(response => response.data)
-  })
-})
+  tasks.value = await callPython("GET", "tasks")
+    .then((response) => response.data)
+    .catch(() => {
+      listen("backend-ready", async () => {
+        tasks.value = await callPython("GET", "tasks").then(
+          (response) => response.data
+        );
+      });
+    });
+});
 
-async function greet() {
-  // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-  console.log("calling log cosnole");
-  // greetMsg.value = await callPython("GET" , "greet" , {}) || 'Failed to call backend';
-}
 
 async function deleteTask(taskId) {
   console.log("deleting task :" + `${taskId}`);
   tasks.value = tasks.value.filter((task) => task.id !== taskId);
-  const response_data = await callPython("DELETE", "tasks", {taskId: taskId})
+  const response_data = await callPython("DELETE", "tasks", { taskId: taskId })
     .then(() => {
       tasks.value = tasks.value.filter((task) => task.id !== taskId);
     })
     .catch((error) => {
       console.error("Python call failed:", error);
     });
-  console.log(response_data)
+  console.log(response_data);
 }
 async function addTask() {
   const task = {
     id: tasks.value.length + 1,
     createdAt: new Date().toISOString(),
     taskName: taskName.value,
-  }
+  };
   const response_data = await callPython("POST", "tasks", task)
     .then(() => {
-      tasks.value.push({...task, name: task.taskName })
+      tasks.value.push({ ...task, name: task.taskName });
     })
     .catch((error) => {
       console.error("Python call failed:", error);
     });
   // console.log(greetMsg.value)
-  console.log(response_data)
+  console.log(response_data);
 
   // callPython("POST" , "tasks" , task)
 }
@@ -107,7 +96,6 @@ body {
   align-items: center;
 }
 </style>
-
 
 <style scoped>
 .task-list {
@@ -205,4 +193,3 @@ button:active {
   color: black;
 }
 </style>
-
